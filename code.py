@@ -5,6 +5,7 @@ from devices import Devices
 # todo:  get a better font
 #import adafruit_bitmap_font
 # ----
+import alarm
 import time
 import board
 
@@ -48,24 +49,23 @@ button_funcs = [
     { 'button': board.BUTTON_D, 'func': next_floor   },
 ]
 
-import keypad
-button_pins = (board.BUTTON_A, board.BUTTON_C, board.BUTTON_D)
-buttons = keypad.Keys(button_pins, value_when_pressed=False, pull=True)
+pin_alarm_a = alarm.pin.PinAlarm(pin=board.BUTTON_A, value=False, pull=True)
+pin_alarm_c = alarm.pin.PinAlarm(pin=board.BUTTON_C, value=False, pull=True)
+pin_alarm_d = alarm.pin.PinAlarm(pin=board.BUTTON_D, value=False, pull=True)
 
-now = time.monotonic()
+triggered_alarm = None
 while True:
-    # go to sleep.  wake up on button, and timer
-    button = buttons.events.get()
-    if button:
-        if button.released:
-            button_funcs[button.key_number]['func']()
-
-    if (now + 60) < time.monotonic():
+    if isinstance(triggered_alarm, alarm.pin.PinAlarm):
+        if triggered_alarm == pin_alarm_a:
+            select_datum()
+        elif triggered_alarm == pin_alarm_c:
+            refresh()
+        elif triggered_alarm == pin_alarm_d:
+            next_floor()
+    elif isinstance(triggered_alarm, alarm.time.TimeAlarm):
         refresh()
-        now = time.monotonic()
-
-    time.sleep(0.01)
-
+    time_alarm = alarm.time.TimeAlarm(monotonic_time=time.monotonic() + 60)
+    triggered_alarm = alarm.light_sleep_until_alarms(pin_alarm_a, pin_alarm_c, pin_alarm_d, time_alarm)
 
 # -----------------------
 
