@@ -1,7 +1,4 @@
 
-from connect import connect
-import airgradient
-# ----
 import time
 import board
 import displayio
@@ -15,6 +12,7 @@ class Display:
     main_group = None
     floor_label = None
     co2_label = None
+    _charge_needed = False
 
     def __init__(self):
         #font_path = "/fonts/LeagueSpartan_Bold_16.bdf"
@@ -69,8 +67,12 @@ class Display:
         self.main_group.append(self.co2_label)
 
         self.add_icon("tune.bmp",     15, 100)
-        self.add_icon("floor.bmp",   230, 100)
         self.add_icon("refresh.bmp", 156, 100)
+        self.add_icon("floor.bmp",   230, 100)
+
+        self.battery_group = displayio.Group()
+        self.main_group.append(self.battery_group)
+        self.battery_icon = self.icon("low-battery.bmp", 260, 100)
 
     @property
     def floor(self):
@@ -86,14 +88,31 @@ class Display:
     def co2(self, value):
         self.co2_label.text = f"{value}"
 
+    @property
+    def charge_needed(self):
+        return self._charge_needed
+    @charge_needed.setter
+    def charge_needed(self, value):
+        self._charge_needed = value
+
     def refresh(self):
+        if self.battery_icon in self.battery_group:
+            self.battery_group.pop()
+        if self.charge_needed:
+            self.battery_group.append(self.battery_icon)
+            
         self.display.root_group = self.main_group
         self.display.refresh()
         time.sleep(self.display.time_to_refresh)
 
     def add_icon(self, path, x, y):
+        tile_grid = self.icon(path, x, y)
+        self.main_group.append(tile_grid)
+        return tile_grid
+        
+    def icon(self, path, x, y):
         bitmap = displayio.OnDiskBitmap(f"/images/{path}")
         tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
         tile_grid.x = x
         tile_grid.y = y
-        self.main_group.append(tile_grid)
+        return tile_grid
