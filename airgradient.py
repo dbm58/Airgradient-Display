@@ -24,6 +24,9 @@ class AirgradientData:
     def __init__(self, data):
         self.data = data
 
+    def get_value(self, prop):
+        return round(self.data[prop])
+        
     @property
     def co2(self):
         return round(self.data['rco2'])

@@ -10,8 +10,10 @@ from adafruit_bitmap_font import bitmap_font
 class Display:
     display = None
     main_group = None
-    floor_label = None
     co2_label = None
+    datum_label = None
+    floor_label = None
+    rate_label = None
     _charge_needed = False
 
     def __init__(self):
@@ -66,7 +68,13 @@ class Display:
         self.co2_label.anchored_position = (self.display.width // 2, self.display.height // 2)
         self.main_group.append(self.co2_label)
 
-        self.add_icon("tune.bmp",     15, 100)
+        self.datum_label = self.add_label(15, 105)
+        self.datum_label.text = 'CO2'
+
+        self.rate_label = self.add_label(80, 105)
+        self.rate_label.text = '1 min'
+
+        #self.add_icon("tune.bmp",     15, 100)
         self.add_icon("refresh.bmp", 156, 100)
         self.add_icon("floor.bmp",   230, 100)
 
@@ -95,6 +103,20 @@ class Display:
     def charge_needed(self, value):
         self._charge_needed = value
 
+    @property
+    def datum_text(self):
+        return self.datum_label.text
+    @datum_text.setter
+    def datum_text(self, value):
+        self.datum_label.text = value
+        
+    @property
+    def rate_text(self):
+        return self.rate_label.text
+    @rate_text.setter
+    def rate_text(self, value):
+        self.rate_label.text = value
+        
     def refresh(self):
         if self.battery_icon in self.battery_group:
             self.battery_group.pop()
@@ -116,3 +138,20 @@ class Display:
         tile_grid.x = x
         tile_grid.y = y
         return tile_grid
+
+    def add_label(self, x, y):
+        new_label = label.Label(
+            terminalio.FONT,
+            scale=1,
+            text="",
+            color=0x000000,
+            background_color=0xFFFFFF,
+            padding_top=1,
+            padding_bottom=3,
+            padding_right=4,
+            padding_left=4
+        )
+        new_label.anchor_point = (0, 0)
+        new_label.anchored_position = (x, y)
+        self.main_group.append(new_label)
+        return new_label
