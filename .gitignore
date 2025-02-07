@@ -174,3 +174,4 @@ cython_debug/
 secrets.py
 /System\ Volume\ Information
 /venv
+boot_out.txt
