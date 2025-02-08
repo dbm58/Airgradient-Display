@@ -6,11 +6,9 @@ from airgradient import Airgradient
 from battery import Battery
 from connect import connect
 from devices import Devices
-from display import Display
+from vdisplay import Display
 
-# todo:  battery indicator
-# todo:  implement datum selector
-# todo:  implement refresh rate selector (also needs button)
+display = Display()
 
 requests = connect()
 
@@ -19,7 +17,6 @@ sn, descr = devices.current
 
 airgradient = Airgradient()
 battery = Battery()
-display = Display()
 
 props = [
     {"prop": "rco2",      "descr": "CO2" },
@@ -42,11 +39,16 @@ def refresh():
     sn, descr = devices.current
     data = airgradient.fetch(requests, sn)
 
-    display.floor = descr
-    display.co2 = data.get_value(prop['prop'])
-    display.datum_text = prop['descr']
-    display.rate_text = f"{refresh_rate} min"
-    display.charge_needed = battery.charge_needed
+    display.location = descr
+    display.value1 = data.get_value('rco2')
+    display.value1_label = 'CO2'
+    display.value2 = data.get_value('tvocIndex')
+    display.value2_label = 'TVOC'
+    display.value3 = data.get_value('noxIndex')
+    display.value3_label = 'NOx'
+
+    display.charge_needed = True #battery.charge_needed
+    
     display.refresh()
 
 def next_floor():
