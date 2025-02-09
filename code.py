@@ -42,12 +42,11 @@ def select_rate():
     pass
     
 def refresh():
-    rotation = accel.orientation
-    if rotation == 0 or rotation == 180:
+    if accel.portrait:
         display = vertical
     else:
         display = horizontal
-    display.rotation = rotation
+    display.rotation = accel.rotation
 
     sn, descr = devices.current
     data = airgradient.fetch(requests, sn)

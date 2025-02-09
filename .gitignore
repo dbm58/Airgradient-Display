@@ -175,3 +175,5 @@ secrets.py
 /System\ Volume\ Information
 /venv
 boot_out.txt
+/sd
+/settings.toml
