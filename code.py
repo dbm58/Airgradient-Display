@@ -6,11 +6,12 @@ from airgradient import Airgradient
 from battery import Battery
 from connect import connect
 from devices import Devices
-from display import Display
+from Display.horizontal import Horizontal
+from Display.vertical import Vertical
 
-# todo:  battery indicator
-# todo:  implement datum selector
-# todo:  implement refresh rate selector (also needs button)
+horizontal = Horizontal()
+vertical = Vertical()
+display = vertical
 
 requests = connect()
 
@@ -19,7 +20,6 @@ sn, descr = devices.current
 
 airgradient = Airgradient()
 battery = Battery()
-display = Display()
 
 props = [
     {"prop": "rco2",      "descr": "CO2" },
@@ -42,11 +42,16 @@ def refresh():
     sn, descr = devices.current
     data = airgradient.fetch(requests, sn)
 
-    display.floor = descr
-    display.co2 = data.get_value(prop['prop'])
-    display.datum_text = prop['descr']
-    display.rate_text = f"{refresh_rate} min"
+    display.location = descr
+    display.value1 = data.get_value('rco2')
+    display.value1_label = 'CO2'
+    display.value2 = data.get_value('tvocIndex')
+    display.value2_label = 'TVOC'
+    display.value3 = data.get_value('noxIndex')
+    display.value3_label = 'NOx'
+
     display.charge_needed = battery.charge_needed
+    
     display.refresh()
 
 def next_floor():
@@ -64,8 +69,12 @@ triggered_alarm = None
 while True:
     if isinstance(triggered_alarm, alarm.pin.PinAlarm):
         if triggered_alarm == pin_alarm_a:
-            props = props[1:] + props[:1]
-            prop = props[0]
+            #props = props[1:] + props[:1]
+            #prop = props[0]
+            if display == vertical:
+                display = horizontal
+            else:
+                display = vertical
             refresh()
         elif triggered_alarm == pin_alarm_b:
             refresh_rates = refresh_rates[1:] + refresh_rates[:1]
