@@ -8,6 +8,7 @@ from connect import connect
 from devices import Devices
 from Display.horizontal import Horizontal
 from Display.vertical import Vertical
+from accelerometer import Accelerometer
 
 horizontal = Horizontal()
 vertical = Vertical()
@@ -20,6 +21,8 @@ sn, descr = devices.current
 
 airgradient = Airgradient()
 battery = Battery()
+
+accel = Accelerometer()
 
 props = [
     {"prop": "rco2",      "descr": "CO2" },
@@ -39,6 +42,13 @@ def select_rate():
     pass
     
 def refresh():
+    rotation = accel.orientation
+    if rotation == 0 or rotation == 180:
+        display = vertical
+    else:
+        display = horizontal
+    display.rotation = rotation
+
     sn, descr = devices.current
     data = airgradient.fetch(requests, sn)
 
