@@ -6,9 +6,12 @@ from airgradient import Airgradient
 from battery import Battery
 from connect import connect
 from devices import Devices
-from vdisplay import Display
+from Display.horizontal import Horizontal
+from Display.vertical import Vertical
 
-display = Display()
+horizontal = Horizontal()
+vertical = Vertical()
+display = vertical
 
 requests = connect()
 
@@ -47,7 +50,7 @@ def refresh():
     display.value3 = data.get_value('noxIndex')
     display.value3_label = 'NOx'
 
-    display.charge_needed = True #battery.charge_needed
+    display.charge_needed = battery.charge_needed
     
     display.refresh()
 
@@ -66,8 +69,12 @@ triggered_alarm = None
 while True:
     if isinstance(triggered_alarm, alarm.pin.PinAlarm):
         if triggered_alarm == pin_alarm_a:
-            props = props[1:] + props[:1]
-            prop = props[0]
+            #props = props[1:] + props[:1]
+            #prop = props[0]
+            if display == vertical:
+                display = horizontal
+            else:
+                display = vertical
             refresh()
         elif triggered_alarm == pin_alarm_b:
             refresh_rates = refresh_rates[1:] + refresh_rates[:1]
