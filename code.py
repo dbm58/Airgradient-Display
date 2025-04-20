@@ -1,3 +1,7 @@
+import supervisor
+supervisor.set_next_code_file('main.py')
+supervisor.reload()
+
 import alarm
 import time
 import board
