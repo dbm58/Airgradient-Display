@@ -20,7 +20,11 @@ class Ui(UiBase):
         self.set_background()
 
         label_attrs = {
-            'font': terminalio.FONT,
+            'font': self.label_font,
+            'background_color': WHITE,
+            'color': BLACK }
+        value_attrs = {
+            'font': self.value_font,
             'background_color': WHITE,
             'color': BLACK }
 
@@ -32,9 +36,9 @@ class Ui(UiBase):
             anchored_position=(self.display.width/2,0))
 
         self.labels = [
-            label.Label( text="Hello", scale=3, **label_attrs ),
-            label.Label( text="Hello", scale=3, **label_attrs ),
-            label.Label( text="Hello", scale=3, **label_attrs ),
+            label.Label( text="99", scale=2, **value_attrs ),
+            label.Label( text="99", scale=2, **value_attrs ),
+            label.Label( text="99", scale=2, **value_attrs ),
             ]
 
         layout = GridLayout(
@@ -44,7 +48,7 @@ class Ui(UiBase):
             height=self.display.height - (location.height * location.scale),
             grid_size=(1, 3),
             cell_padding=8,
-            divider_lines=True,  # divider lines around every cell
+            #divider_lines=True,  # divider lines around every cell
             divider_line_color=BLACK,
             cell_anchor_point=(0.5, 0.5)
         )
@@ -57,6 +61,9 @@ class Ui(UiBase):
             self.caption(layout, self.labels[1], 'caption'),
             self.caption(layout, self.labels[2], 'caption')
             ]
+
+        [setattr(obj, 'text', "") for obj in self.labels]
+        [setattr(obj, 'text', "") for obj in self.captions]
 
         main_group.append(location)
         main_group.append(layout)
@@ -80,7 +87,7 @@ class Ui(UiBase):
             color=BLACK,
             anchor_point=(0.5, 0),
             anchored_position=(self.display.width/2,
-                target.y + ((target.height * target.scale)/2)))
+                target.y + ((target.height * target.scale)/2) + 2))
         layout.append(caption)
         return caption
 
