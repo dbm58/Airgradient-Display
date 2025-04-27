@@ -1,13 +1,12 @@
-
+import board
 from ui import Ui
 
-ui = Ui()
-ui.set_value(0, "99")
-ui.set_value(1, "88")
-ui.set_value(2, "77")
-ui.set_caption(0, "v1")
-ui.set_caption(1, "v2")
-ui.set_caption(2, "v3")
+ui = Ui(board.DISPLAY)
+ui.heading = 'Location'
+ui.define_fields(['v1', 'v2', 'v3'])
+ui['v1'] = 99
+ui['v2'] = 88
+ui['v3'] = 77
 ui.refresh()
 
 while True:
