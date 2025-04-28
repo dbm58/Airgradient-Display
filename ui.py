@@ -4,6 +4,7 @@ import terminalio
 from adafruit_bitmap_font import bitmap_font
 from adafruit_display_text import label
 from adafruit_displayio_layout.layouts.grid_layout import GridLayout
+from adafruit_display_shapes.rect import Rect
 
 from colors import *
 from ui_base import UiBase
@@ -81,8 +82,28 @@ class Ui(UiBase):
         [setattr(obj, 'text', "") for obj in self.captions]
         self.heading_label.text = ""
 
+        self.battery = self.add_icon(
+            "low-battery.bmp",
+            self.display.width - 24,
+            self.display.height - 24)
+        self.battery.hidden = True
+
         self.display.root_group.append(self.heading_label)
         self.display.root_group.append(layout)
+
+        menu = displayio.Group(x=40,y=0)
+        self.display.root_group.append(menu)
+        menu.append(Rect(0,0,self.display.width - 40,self.display.height,
+        fill=WHITE,outline=BLACK))
+        menu.append(
+            label.Label(
+                text='Refresh',
+                **self.heading_attrs,
+                anchor_point = (0, 0),
+                anchored_position = (0, 0)
+                )
+            )
+
 
     def caption(self, layout, target, text):
         caption = label.Label(

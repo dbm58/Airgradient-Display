@@ -1,7 +1,6 @@
 import board
 
 from airgradient import Airgradient
-from battery import Battery
 from connect import connect
 from devices import Devices
 from message_pump import *
@@ -17,7 +16,6 @@ devices = Devices()
 sn, descr = devices.current
 
 airgradient = Airgradient()
-battery = Battery()
 
 def refresh():
     sn, descr = devices.current
@@ -28,15 +26,17 @@ def refresh():
     ui['TVOC'] = data.get_value('tvocIndex')
     ui['NOx'] = data.get_value('noxIndex')
 
-    #display.charge_needed = battery.charge_needed
-    
     ui.refresh()
 
 for msg in MessagePump():
     msg_type, msg_value = msg
-    if msg_type == DISPLAY_DATA:
+    if msg_type == CHARGE_NEEDED:
+        ui.battery.hidden = False
+        # todo: this won't hide without a board reset
+    elif msg_type == DISPLAY_DATA:
         refresh()
     elif msg_type == CHANGE_ORIENTATION:
+        print('in change orientation')
         pass
     else:
         print('message_type', msg_type)

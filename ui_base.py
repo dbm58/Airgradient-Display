@@ -22,3 +22,14 @@ class UiBase:
         time.sleep(self.display.time_to_refresh + 0.1)
         self.display.refresh()
 
+    def add_icon(self, path, x, y):
+        tile_grid = self.icon(path, x, y)
+        self.display.root_group.append(tile_grid)
+        return tile_grid
+        
+    def icon(self, path, x, y):
+        bitmap = displayio.OnDiskBitmap(f"/images/{path}")
+        tile_grid = displayio.TileGrid(bitmap, pixel_shader=bitmap.pixel_shader)
+        tile_grid.x = x
+        tile_grid.y = y
+        return tile_grid

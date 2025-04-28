@@ -3,7 +3,6 @@ import ssl
 import wifi
 import socketpool
 import adafruit_requests
-from secrets import secrets
 
 def connect():
     ssid = os.getenv('wifi_ssid')
