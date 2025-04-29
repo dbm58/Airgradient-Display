@@ -62,19 +62,19 @@ class MessagePump:
                 yield (BUTTON_DOWN, None)
                 if triggered_alarm == self.pin_alarm_a:
                     yield (BUTTON_DOWN_A, None)
-                    _debounce(board.BUTTON_A)
+                    self._debounce(board.BUTTON_A)
                     yield (BUTTON_UP_A, None)
                 elif triggered_alarm == self.pin_alarm_b:
                     yield (BUTTON_DOWN_B, None)
-                    _debounce(board.BUTTON_B)
+                    self._debounce(board.BUTTON_B)
                     yield (BUTTON_UP_B, None)
                 elif triggered_alarm == self.pin_alarm_c:
                     yield (BUTTON_DOWN_C, None)
-                    _debounce(board.BUTTON_C)
+                    self._debounce(board.BUTTON_C)
                     yield (BUTTON_UP_C, None)
                 elif triggered_alarm == self.pin_alarm_d:
                     yield (BUTTON_DOWN_D, None)
-                    _debounce(board.BUTTON_D)
+                    self._debounce(board.BUTTON_D)
                     yield (BUTTON_UP_D, None)
                 yield (BUTTON_UP, None)
             elif isinstance(triggered_alarm, alarm.time.TimeAlarm):

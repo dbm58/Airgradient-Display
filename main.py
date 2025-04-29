@@ -30,14 +30,15 @@ def refresh():
 
 for msg in MessagePump():
     msg_type, msg_value = msg
+
     if msg_type == CHARGE_NEEDED:
         ui.battery.hidden = False
         # todo: this won't hide without a board reset
     elif msg_type == DISPLAY_DATA:
         refresh()
-    elif msg_type == CHANGE_ORIENTATION:
-        print('in change orientation')
-        pass
+    elif msg_type == BUTTON_DOWN:
+        ui.menu.hidden = not ui.menu.hidden
+        ui.refresh()
     else:
         print('message_type', msg_type)
 

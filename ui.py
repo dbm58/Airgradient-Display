@@ -91,18 +91,54 @@ class Ui(UiBase):
         self.display.root_group.append(self.heading_label)
         self.display.root_group.append(layout)
 
-        menu = displayio.Group(x=40,y=0)
-        self.display.root_group.append(menu)
-        menu.append(Rect(0,0,self.display.width - 40,self.display.height,
-        fill=WHITE,outline=BLACK))
-        menu.append(
-            label.Label(
-                text='Refresh',
-                **self.heading_attrs,
-                anchor_point = (0, 0),
-                anchored_position = (0, 0)
+        menu_attrs = self.cmn_attrs | {
+            'font': self.label_font,
+            'scale': 2,
+            'background_color': GRAY,
+            'color': WHITE,
+            }
+        self.menu = displayio.Group(x=20, y=32)
+        self.display.root_group.append(self.menu)
+        self.menu.append(
+            Rect(
+                0, 0,
+                self.display.width - 20, self.display.height - 32 - 10,
+                fill=GRAY,outline=WHITE
                 )
             )
+        self.menu.append(
+            label.Label(
+                text='Refresh',
+                **menu_attrs,
+                anchor_point = (0, 0.5),
+                anchored_position = (4, 20)
+                )
+            )
+        self.menu.append(
+            label.Label(
+                text='Location',
+                **menu_attrs,
+                anchor_point = (0, 0.5),
+                anchored_position = (4, 94)
+                )
+            )
+        self.menu.append(
+            label.Label(
+                text='Location',
+                **menu_attrs,
+                anchor_point = (0, 0.5),
+                anchored_position = (4, 168)
+                )
+            )
+        self.menu.append(
+            label.Label(
+                text='Close',
+                **menu_attrs,
+                anchor_point = (0, 0.5),
+                anchored_position = (4, 238)
+                )
+            )
+        self.menu.hidden = False
 
 
     def caption(self, layout, target, text):
