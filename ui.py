@@ -9,6 +9,7 @@ from adafruit_display_shapes.roundrect import RoundRect
 
 from colors import *
 from ui_base import UiBase
+from menu import Menu
 
 class Ui(UiBase):
     """
@@ -92,58 +93,10 @@ class Ui(UiBase):
         self.display.root_group.append(self.heading_label)
         self.display.root_group.append(layout)
 
-        menu_background = 0x999999
-        menu_label_attrs = {
-            'font': self.label_font,
-            'scale': 2,
-            'background_color': menu_background,
-            'color': BLACK,
-            'anchor_point': (0, 0.5),
-            }
-        menu_attrs = {
-            'fill': menu_background,
-            'outline': BLACK,
-            }
-        self.menu = displayio.Group(x=20, y=32)
-        self.display.root_group.append(self.menu)
-        self.menu.append(
-            RoundRect(
-                0, 0,
-                self.display.width - 20, self.display.height - 32 - 10,
-                5,
-                **menu_attrs,
-                )
-            )
-        self.menu.append(
-            label.Label(
-                text='Refresh',
-                **menu_label_attrs,
-                anchored_position = (4, 20)
-                )
-            )
-        self.menu.append(
-            label.Label(
-                text='Location',
-                **menu_label_attrs,
-                anchored_position = (4, 94)
-                )
-            )
-        self.menu.append(
-            label.Label(
-                text='Location',
-                **menu_label_attrs,
-                anchored_position = (4, 168)
-                )
-            )
-        self.menu.append(
-            label.Label(
-                text='Close',
-                **menu_label_attrs,
-                anchored_position = (4, 238)
-                )
-            )
-        self.menu.hidden = False
-
+        menu = Menu(20, 32,
+            self.display.width - 20, self.display.height - 32 - 10)
+        menu.items = ['Refresh', 'Location', '', 'Close']
+        self.display.root_group.append(menu)
 
     def caption(self, layout, target, text):
         caption = label.Label(
