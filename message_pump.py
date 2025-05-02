@@ -4,6 +4,7 @@ from digitalio import DigitalInOut, Direction, Pull
 import time
 
 from battery import Battery
+from buttons import Buttons
 
 DISPLAY_DATA = 1
 CHARGE_NEEDED = 2
@@ -21,31 +22,11 @@ PROGRAM_DONE = 99
 
 class MessagePump:
     def __init__(self):
-        attrs = { 'value': False, 'pull': True }
-        self.pin_alarm_a = alarm.pin.PinAlarm(pin=board.BUTTON_A, **attrs)
-        self.pin_alarm_b = alarm.pin.PinAlarm(pin=board.BUTTON_B, **attrs)
-        self.pin_alarm_c = alarm.pin.PinAlarm(pin=board.BUTTON_C, **attrs)
-        self.pin_alarm_d = alarm.pin.PinAlarm(pin=board.BUTTON_D, **attrs)
-        self.alarms = (
-            self.pin_alarm_a,
-            self.pin_alarm_b,
-            self.pin_alarm_c,
-            self.pin_alarm_d
-            )
+        self.buttons = Buttons()
+
         self.refresh_rate = 1 # 1 minute
 
         self.battery = Battery()
-
-    def Button(self, pin):
-        switch = DigitalInOut(pin)
-        switch.direction = Direction.INPUT
-        switch.pull = Pull.UP
-        return switch
-
-    def _debounce(self, pin):
-        button = self.Button(pin)
-        while not button.value:
-            pass
 
     @property
     def time_alarm(self):
@@ -59,27 +40,25 @@ class MessagePump:
             if self.battery.charge_needed:
                 yield (CHARGE_NEEDED, self.battery.voltage)
             if isinstance(triggered_alarm, alarm.pin.PinAlarm):
-                yield (BUTTON_DOWN, None)
-                if triggered_alarm == self.pin_alarm_a:
+                yield (BUTTON_DOWN, self.buttons.name(triggered_alarm))
+                if triggered_alarm == self.buttons.pin_alarm_a:
                     yield (BUTTON_DOWN_A, None)
-                    self._debounce(board.BUTTON_A)
+                    self.buttons.debounce(board.BUTTON_A)
                     yield (BUTTON_UP_A, None)
-                elif triggered_alarm == self.pin_alarm_b:
+                elif triggered_alarm == self.buttons.pin_alarm_b:
                     yield (BUTTON_DOWN_B, None)
-                    self._debounce(board.BUTTON_B)
+                    self.buttons.debounce(board.BUTTON_B)
                     yield (BUTTON_UP_B, None)
-                elif triggered_alarm == self.pin_alarm_c:
+                elif triggered_alarm == self.buttons.pin_alarm_c:
                     yield (BUTTON_DOWN_C, None)
-                    self._debounce(board.BUTTON_C)
+                    self.buttons.debounce(board.BUTTON_C)
                     yield (BUTTON_UP_C, None)
-                elif triggered_alarm == self.pin_alarm_d:
+                elif triggered_alarm == self.buttons.pin_alarm_d:
                     yield (BUTTON_DOWN_D, None)
-                    self._debounce(board.BUTTON_D)
+                    self.buttons.debounce(board.BUTTON_D)
                     yield (BUTTON_UP_D, None)
-                yield (BUTTON_UP, None)
+                yield (BUTTON_UP, self.buttons.name(triggered_alarm))
             elif isinstance(triggered_alarm, alarm.time.TimeAlarm):
                 yield (DISPLAY_DATA, None)
-            triggered_alarm = \
-                alarm.light_sleep_until_alarms(*(self.alarms), self.time_alarm)
-        
-                
+            all_alarms = self.buttons.alarms + (self.time_alarm,)
+            triggered_alarm = alarm.light_sleep_until_alarms(*(all_alarms))

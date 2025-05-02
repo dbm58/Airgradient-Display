@@ -8,7 +8,6 @@ from ui import Ui
 
 ui = Ui(board.DISPLAY)
 ui.define_fields(['CO2', 'TVOC', 'NOx'])
-print(dir(ui))
 
 requests = connect()
 
@@ -28,6 +27,34 @@ def refresh():
 
     ui.refresh()
 
+def button_handler_menu_closed(msg_type, msg_vlaue):
+    global button_handler
+    if msg_type == BUTTON_DOWN:
+        if ui.menu.hidden:
+            ui.menu.hidden = False
+            ui.refresh()
+    elif msg_type == BUTTON_UP:
+        button_handler = button_handler_menu_open
+
+def button_handler_menu_open(msg_type, msg_vlaue):
+    global button_handler
+    if msg_type == BUTTON_DOWN_A:
+        if not ui.menu.hidden:
+            ui.menu.hidden = True
+            ui.refresh()
+    elif msg_type == BUTTON_DOWN_B:
+        pass
+    elif msg_type == BUTTON_DOWN_C:
+        pass
+    elif msg_type == BUTTON_DOWN_D:
+        if not ui.menu.hidden:
+            ui.menu.hidden = True
+            refresh()
+    elif msg_type == BUTTON_UP:
+        button_handler = button_handler_menu_closed
+
+button_handler = button_handler_menu_closed
+
 for msg in MessagePump():
     msg_type, msg_value = msg
 
@@ -35,12 +62,10 @@ for msg in MessagePump():
         ui.battery.hidden = False
         # todo: this won't hide without a board reset
     elif msg_type == DISPLAY_DATA:
-        refresh()
-    elif msg_type == BUTTON_DOWN:
-        ui.menu.hidden = not ui.menu.hidden
-        ui.refresh()
+        if ui.menu.hidden:
+            refresh()
     else:
-        print('message_type', msg_type)
+        button_handler(msg_type, msg_value)
 
 # -----------------------
 

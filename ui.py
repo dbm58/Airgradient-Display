@@ -97,6 +97,7 @@ class Ui(UiBase):
             self.display.width - 20, self.display.height - 32 - 10)
         menu.items = ['Refresh', 'Location', '', 'Close']
         self.display.root_group.append(menu)
+        self.menu = menu
 
     def caption(self, layout, target, text):
         caption = label.Label(

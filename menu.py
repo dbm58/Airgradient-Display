@@ -37,7 +37,7 @@ class Menu(displayio.Group):
         self.append(label.Label(**item_attrs, anchored_position = (4, 94)))
         self.append(label.Label(**item_attrs, anchored_position = (4, 168)))
         self.append(label.Label(**item_attrs, anchored_position = (4, 238)))
-        self.hidden = False
+        self.hidden = True
 
     @property
     def items(self):

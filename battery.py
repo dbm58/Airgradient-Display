@@ -19,7 +19,6 @@ class Battery:
 
     @property
     def charge_needed(self):
-        print('battery', self.voltage)
         return self.voltage <= 3.7
 
 #  =============================================================
