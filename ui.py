@@ -9,7 +9,7 @@ from adafruit_display_shapes.roundrect import RoundRect
 
 from colors import *
 from ui_base import UiBase
-from menu import Menu
+from ui_menu import Menu
 
 class Ui(UiBase):
     """
@@ -98,6 +98,9 @@ class Ui(UiBase):
         menu.items = ['Refresh', 'Location', '', 'Close']
         self.display.root_group.append(menu)
         self.menu = menu
+
+        self.wait = displayio.Group()
+        self.wifi = displayio.Group()
 
     def caption(self, layout, target, text):
         caption = label.Label(

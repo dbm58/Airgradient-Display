@@ -34,8 +34,7 @@ class MessagePump:
         return alarm.time.TimeAlarm(monotonic_time=next_update)
         
     def __iter__(self):
-        yield (DISPLAY_DATA, None)
-        triggered_alarm = None
+        triggered_alarm = self.time_alarm
         while True:
             if self.battery.charge_needed:
                 yield (CHARGE_NEEDED, self.battery.voltage)

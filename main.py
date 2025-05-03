@@ -1,4 +1,5 @@
 import board
+import wifi
 
 from airgradient import Airgradient
 from connect import connect
@@ -17,15 +18,25 @@ sn, descr = devices.current
 airgradient = Airgradient()
 
 def refresh():
-    sn, descr = devices.current
-    data = airgradient.fetch(requests, sn)
+    if not wifi.radio.connected:
+        ui.wifi.hidden = True
+        ui.refresh()
+        return
 
-    ui.heading = descr
-    ui['CO2'] = data.get_value('rco2')
-    ui['TVOC'] = data.get_value('tvocIndex')
-    ui['NOx'] = data.get_value('noxIndex')
-
-    ui.refresh()
+    try:
+        sn, descr = devices.current
+        data = airgradient.fetch(requests, sn)
+    except Exception:
+        ui.wait.hidden = True
+    else:
+        ui.wait.hidden = False
+        ui.wifi.hidden = False
+        ui.heading = descr
+        ui['CO2'] = data.get_value('rco2')
+        ui['TVOC'] = data.get_value('tvocIndex')
+        ui['NOx'] = data.get_value('noxIndex')
+    finally:
+        ui.refresh()
 
 def button_handler_menu_closed(msg_type, msg_vlaue):
     global button_handler
