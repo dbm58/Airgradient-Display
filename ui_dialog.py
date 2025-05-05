@@ -1,3 +1,4 @@
+import board
 import displayio
 import terminalio
 
@@ -5,43 +6,33 @@ from adafruit_display_text import label
 from adafruit_display_shapes.roundrect import RoundRect
 
 from colors import *
+from icon import Icon
 
 class Dialog(displayio.Group):
     menu_background = SILVER
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x=10, y=10, icon=None):
+        super().__init__(x=x, y=y)
 
-        item_attrs = {
-            'anchor_point': (0, 0.5),
-            'background_color': self.menu_background,
-            'color': BLACK,
-            'font': terminalio.FONT,
-            'scale': 2,
-            'text': '',
-            }
         menu_attrs = {
             'x': 0,
             'y': 0,
-            'width': width,
-            'height': height,
+            'width': board.DISPLAY.width - (2 * x),
+            'height': board.DISPLAY.height - (2 * y),
             'r': 5,
             'fill': self.menu_background,
             'outline': BLACK,
             }
 
         self.append(RoundRect(**menu_attrs))
-        self.append(label.Label(**item_attrs, anchored_position = (4, 20)))
-        self.append(label.Label(**item_attrs, anchored_position = (4, 94)))
-        self.append(label.Label(**item_attrs, anchored_position = (4, 168)))
-        self.append(label.Label(**item_attrs, anchored_position = (4, 238)))
-        self.hidden = True
 
-    @property
-    def items(self):
-        return [item.text for item in self]
-    @items.setter
-    def items(self, value):
-        for index, text in enumerate(value):
-            # The RoundRect is [0], so add 1
-            self[index + 1].text = text
+        if not icon == None:
+            icon = Icon(icon)
+            icon.x = int((menu_attrs['width'] / 2) - (icon.width / 2))
+            icon.y = int((menu_attrs['height'] / 2) - (icon.height / 2))
+            self.append(icon)
+
+class Dialogs():
+    WIFI_OFF = Dialog(icon='wifi-off.bmp')
+    HOURGLASS = Dialog(icon='hourglass.bmp')
+    BATTERY_ALERT = Dialog(icon='battery-alert-48.bmp')

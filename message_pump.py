@@ -3,7 +3,6 @@ import board
 from digitalio import DigitalInOut, Direction, Pull
 import time
 
-from battery import Battery
 from buttons import Buttons
 
 DISPLAY_DATA = 1
@@ -26,8 +25,6 @@ class MessagePump:
 
         self.refresh_rate = 1 # 1 minute
 
-        self.battery = Battery()
-
     @property
     def time_alarm(self):
         next_update = time.monotonic() + (60 * self.refresh_rate)
@@ -36,8 +33,6 @@ class MessagePump:
     def __iter__(self):
         triggered_alarm = self.time_alarm
         while True:
-            if self.battery.charge_needed:
-                yield (CHARGE_NEEDED, self.battery.voltage)
             if isinstance(triggered_alarm, alarm.pin.PinAlarm):
                 yield (BUTTON_DOWN, self.buttons.name(triggered_alarm))
                 if triggered_alarm == self.buttons.pin_alarm_a:

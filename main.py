@@ -2,6 +2,7 @@ import board
 import wifi
 
 from airgradient import Airgradient
+from battery import Battery
 from connect import connect
 from devices import Devices
 from message_pump import *
@@ -16,10 +17,16 @@ devices = Devices()
 sn, descr = devices.current
 
 airgradient = Airgradient()
+battery = Battery()
 
 def refresh():
     if not wifi.radio.connected:
-        ui.wifi.hidden = True
+        ui.wifi_off_dialog.hidden = False
+        ui.refresh()
+        return
+
+    if battery.charge_needed:
+        ui.battery_alert_dialog.hidden = False
         ui.refresh()
         return
 
@@ -27,10 +34,12 @@ def refresh():
         sn, descr = devices.current
         data = airgradient.fetch(requests, sn)
     except Exception:
-        ui.wait.hidden = True
+        ui.hourglass_dialog.hidden = False
     else:
-        ui.wait.hidden = False
-        ui.wifi.hidden = False
+        ui.battery_alert_dialog.hidden = True
+        ui.hourglass_dialog.hidden = True
+        ui.wifi_off_dialog.hidden = True
+
         ui.heading = descr
         ui['CO2'] = data.get_value('rco2')
         ui['TVOC'] = data.get_value('tvocIndex')
@@ -69,10 +78,7 @@ button_handler = button_handler_menu_closed
 for msg in MessagePump():
     msg_type, msg_value = msg
 
-    if msg_type == CHARGE_NEEDED:
-        ui.battery.hidden = False
-        # todo: this won't hide without a board reset
-    elif msg_type == DISPLAY_DATA:
+    if msg_type == DISPLAY_DATA:
         if ui.menu.hidden:
             refresh()
     else:

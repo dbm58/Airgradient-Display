@@ -9,6 +9,7 @@ from adafruit_display_shapes.roundrect import RoundRect
 
 from colors import *
 from ui_base import UiBase
+from ui_dialog import Dialogs
 from ui_menu import Menu
 
 class Ui(UiBase):
@@ -99,8 +100,17 @@ class Ui(UiBase):
         self.display.root_group.append(menu)
         self.menu = menu
 
-        self.wait = displayio.Group()
-        self.wifi = displayio.Group()
+        self.battery_alert_dialog = Dialogs.BATTERY_ALERT
+        self.battery_alert_dialog.hidden = True
+        self.display.root_group.append(self.battery_alert_dialog)
+
+        self.hourglass_dialog = Dialogs.HOURGLASS
+        self.hourglass_dialog.hidden = True
+        self.display.root_group.append(self.hourglass_dialog)
+
+        self.wifi_off_dialog = Dialogs.WIFI_OFF
+        self.wifi_off_dialog.hidden = True
+        self.display.root_group.append(self.wifi_off_dialog)
 
     def caption(self, layout, target, text):
         caption = label.Label(
