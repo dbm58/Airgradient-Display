@@ -47,7 +47,7 @@ def refresh():
     finally:
         ui.refresh()
 
-def button_handler_menu_closed(msg_type, msg_vlaue):
+def button_handler_menu_closed(msg_type, msg_value):
     global button_handler
     if msg_type == BUTTON_DOWN:
         if ui.menu.hidden:
@@ -56,7 +56,7 @@ def button_handler_menu_closed(msg_type, msg_vlaue):
     elif msg_type == BUTTON_UP:
         button_handler = button_handler_menu_open
 
-def button_handler_menu_open(msg_type, msg_vlaue):
+def button_handler_menu_open(msg_type, msg_value):
     global button_handler
     if msg_type == BUTTON_DOWN_A:
         if not ui.menu.hidden:
@@ -65,13 +65,35 @@ def button_handler_menu_open(msg_type, msg_vlaue):
     elif msg_type == BUTTON_DOWN_B:
         pass
     elif msg_type == BUTTON_DOWN_C:
-        pass
+        ui.menu.hidden = True
+        ui.locations.hidden = False
+        ui.refresh()
+        button_handler = button_handler_pick_location
     elif msg_type == BUTTON_DOWN_D:
         if not ui.menu.hidden:
             ui.menu.hidden = True
             refresh()
     elif msg_type == BUTTON_UP:
+        if msg_value != 'C':
+            button_handler = button_handler_menu_closed
+
+def button_handler_pick_location(msg_type, msg_value):
+    global button_handler
+    if msg_type == BUTTON_DOWN_B:
+        devices.current_device = 2
+        ui.locations.hidden = True
         button_handler = button_handler_menu_closed
+        refresh()
+    elif msg_type == BUTTON_DOWN_C:
+        devices.current_device = 1
+        ui.locations.hidden = True
+        button_handler = button_handler_menu_closed
+        refresh()
+    elif msg_type == BUTTON_DOWN_D:
+        devices.current_device = 0
+        ui.locations.hidden = True
+        button_handler = button_handler_menu_closed
+        refresh()
 
 button_handler = button_handler_menu_closed
 

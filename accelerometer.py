@@ -1,4 +1,5 @@
 import board
+
 from adafruit_lis3dh import LIS3DH_I2C
 
 class Accelerometer():

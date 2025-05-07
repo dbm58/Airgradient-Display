@@ -8,6 +8,7 @@ from adafruit_display_shapes.rect import Rect
 from adafruit_display_shapes.roundrect import RoundRect
 
 from colors import *
+from devices import Devices
 from ui_base import UiBase
 from ui_dialog import Dialogs
 from ui_menu import Menu
@@ -94,12 +95,6 @@ class Ui(UiBase):
         self.display.root_group.append(self.heading_label)
         self.display.root_group.append(layout)
 
-        menu = Menu(20, 32,
-            self.display.width - 20, self.display.height - 32 - 10)
-        menu.items = ['Refresh', 'Location', '', 'Close']
-        self.display.root_group.append(menu)
-        self.menu = menu
-
         self.battery_alert_dialog = Dialogs.BATTERY_ALERT
         self.battery_alert_dialog.hidden = True
         self.display.root_group.append(self.battery_alert_dialog)
@@ -111,6 +106,23 @@ class Ui(UiBase):
         self.wifi_off_dialog = Dialogs.WIFI_OFF
         self.wifi_off_dialog.hidden = True
         self.display.root_group.append(self.wifi_off_dialog)
+
+        menu = Menu(0, 32,
+            self.display.width, self.display.height - 32 - 10)
+        menu.items = ['Refresh', 'Location', '', 'Close']
+        self.display.root_group.append(menu)
+        self.menu = menu
+
+        devices = Devices()
+        locations = Menu(0, 32,
+            self.display.width, self.display.height - 32 - 10)
+        locations.items = [
+            devices.devices[0]['descr'],
+            devices.devices[1]['descr'],
+            devices.devices[2]['descr'],
+            ]
+        self.display.root_group.append(locations)
+        self.locations = locations
 
     def caption(self, layout, target, text):
         caption = label.Label(

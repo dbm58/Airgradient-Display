@@ -1,4 +1,4 @@
-#  =============================================================
+#  =============================================================================
 #  Calculate remaining batter life
 #
 #  From a CircuitPython Parsec video.
@@ -20,8 +20,7 @@ class Battery:
     @property
     def charge_needed(self):
         return self.voltage <= 3.7
-
-#  =============================================================
+#  =============================================================================
 #  Alternative implementation:
 #
 #      from adafruit_magtag.magtag import MagTag
