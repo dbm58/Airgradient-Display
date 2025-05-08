@@ -130,7 +130,7 @@ class Ui(UiBase):
             **self.caption_attrs,
             anchor_point=(0.5, 0),
             anchored_position=(self.display.width/2,
-                target.y + ((target.height * target.scale)/2) + 2))
+                target.y + ((target.height * target.scale)/2) + 6))
         layout.append(caption)
         return caption
 

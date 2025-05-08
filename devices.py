@@ -1,12 +1,14 @@
+import os
 
 class Devices:
     def __init__(self):
         self.current_device = 0
-        self.devices = [
-            { 'sn': '744dbdbf1dc4', 'descr': 'Basement'   },
-            { 'sn': '404cca6dcc38', 'descr': 'Main Floor' },
-            { 'sn': '404cca6eb068', 'descr': 'Top Floor'  },
-        ]
+        locations_env = os.getenv('locations')
+        self.devices = list(map(
+            lambda l, s: { 'sn': s, 'descr': l },
+            map(lambda l: l.split(':')[0], locations_env.split(',')),
+            map(lambda l: l.split(':')[1], locations_env.split(','))
+            ))
 
     @property
     def current(self):
