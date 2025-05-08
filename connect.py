@@ -1,14 +1,19 @@
+import os
+import socketpool
 import ssl
 import wifi
-import socketpool
+
 import adafruit_requests
-from secrets import secrets
+
+import log
 
 def connect():
-    print(f"Connecting to {secrets['ssid']}")
-    wifi.radio.connect(secrets["ssid"], secrets["password"])
-    print(f"Connected to {secrets['ssid']}")
-    print(f"My IP address: {wifi.radio.ipv4_address}")
+    ssid = os.getenv('wifi_ssid')
+    password = os.getenv('wifi_password')
+    log.info(f"Connecting to {ssid}")
+    wifi.radio.connect(ssid, password)
+    log.info(f"Connected to {ssid}")
+    log.info(f"My IP address: {wifi.radio.ipv4_address}")
 
     pool = socketpool.SocketPool(wifi.radio)
     requests = adafruit_requests.Session(pool, ssl.create_default_context())
