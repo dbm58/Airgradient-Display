@@ -7,11 +7,16 @@
 #  Less than 3.7v means that charging is needed
 
 import board
+import digitalio
+import log
+
 from analogio import AnalogIn
 
 class Battery:
     def __init__(self):
         self.pin = AnalogIn(board.VOLTAGE_MONITOR)
+        self.usb_power_pin = digitalio.DigitalInOut(board.NEOPIXEL_POWER)
+        self.usb_power_pin.direction = digitalio.Direction.INPUT
 
     @property
     def voltage(self):
@@ -19,6 +24,10 @@ class Battery:
 
     @property
     def charge_needed(self):
+        if self.usb_power_pin.value:
+            log.debug("Running on external power!")
+            return False
+        log.debug("Running on battery!")
         return self.voltage <= 3.7
 
 #  =============================================================================

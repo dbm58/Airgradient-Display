@@ -1,4 +1,5 @@
 import board
+import log
 import wifi
 
 from airgradient import Airgradient
@@ -26,6 +27,7 @@ def refresh():
         return
 
     if battery.charge_needed:
+        log.info("voltage: ", battery.voltage)
         ui.battery_alert_dialog.hidden = False
         ui.refresh()
         return
@@ -33,7 +35,8 @@ def refresh():
     try:
         sn, descr = devices.current
         data = airgradient.fetch(requests, sn)
-    except Exception:
+    except Exception as ex:
+        log.info('Exception: %s', ex)
         ui.hourglass_dialog.hidden = False
     else:
         ui.battery_alert_dialog.hidden = True
