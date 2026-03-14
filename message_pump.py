@@ -4,9 +4,12 @@ from digitalio import DigitalInOut, Direction, Pull
 import time
 
 from buttons import Buttons
+from wifi_manager import WiFiManager
+wifi = WiFiManager()
 
 DISPLAY_DATA = 1
 CHARGE_NEEDED = 2
+WIFI_DOWN = 3
 BUTTON_DOWN = 10
 BUTTON_UP = 11
 BUTTON_DOWN_A = 12
@@ -33,7 +36,11 @@ class MessagePump:
     def __iter__(self):
         triggered_alarm = self.time_alarm
         while True:
-            if isinstance(triggered_alarm, alarm.pin.PinAlarm):
+            if not wifi.connected:
+                yield (WIFI_DOWN, None)
+                if wifi.connected:
+                    continue
+            elif isinstance(triggered_alarm, alarm.pin.PinAlarm):
                 yield (BUTTON_DOWN, self.buttons.name(triggered_alarm))
                 if triggered_alarm == self.buttons.pin_alarm_a:
                     yield (BUTTON_DOWN_A, None)

@@ -1,18 +1,19 @@
 import board
 import log
-import wifi
 
 from airgradient import Airgradient
 from battery import Battery
-from connect import connect
 from devices import Devices
 from message_pump import *
 from ui import Ui
+from wifi_manager import WiFiManager
 
 ui = Ui(board.DISPLAY)
 ui.define_fields(['CO2', 'TVOC', 'NOx'])
 
-requests = connect()
+wifi = WiFiManager()
+# move the get_requests call to Airgradient
+requests = wifi.get_requests()
 
 devices = Devices()
 sn, descr = devices.current
@@ -20,12 +21,14 @@ sn, descr = devices.current
 airgradient = Airgradient()
 battery = Battery()
 
-def refresh():
-    if not wifi.radio.connected:
+def wifi_down():
+    if not wifi.connect():
         ui.wifi_off_dialog.hidden = False
         ui.refresh()
         return
+    ui.wifi_off_dialog.hidden = True
 
+def refresh():
     if battery.charge_needed:
         log.info("voltage: ", battery.voltage)
         ui.battery_alert_dialog.hidden = False
@@ -103,7 +106,9 @@ button_handler = button_handler_menu_closed
 for msg in MessagePump():
     msg_type, msg_value = msg
 
-    if msg_type == DISPLAY_DATA:
+    if msg_type == WIFI_DOWN:
+        wifi_down()
+    elif msg_type == DISPLAY_DATA:
         if ui.menu.hidden:
             refresh()
     else:
