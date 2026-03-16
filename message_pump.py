@@ -3,6 +3,8 @@ import board
 from digitalio import DigitalInOut, Direction, Pull
 import time
 
+from battery import Battery
+battery = Battery()
 from buttons import Buttons
 from wifi_manager import WiFiManager
 wifi = WiFiManager()
@@ -36,7 +38,19 @@ class MessagePump:
     def __iter__(self):
         triggered_alarm = self.time_alarm
         while True:
-            if not wifi.connected:
+            if battery.charge_needed:
+                #  If the battery is flat:
+                #  *  Send a message to the UI
+                #  *  Sleep.  This lets the UI catch up, and provides a
+                #     safety net so we don't get caught in a reboot loop
+                #  *  Deep sleep.  This is close as we can get to shutting
+                #     off the device
+                #  To wake, reset the device after charging or connecting
+                #  to USB
+                yield (CHARGE_NEEDED, battery.voltage)
+                time.sleep(5)
+                alarm.exit_and_deep_sleep_until_alarms()
+            elif not wifi.connected:
                 yield (WIFI_DOWN, None)
                 if wifi.connected:
                     continue
