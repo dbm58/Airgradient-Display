@@ -1,4 +1,9 @@
 import supervisor
+#supervisor.set_next_code_file('test.info.py')
+#supervisor.set_next_code_file('test.layout.py')
+#supervisor.set_next_code_file('test.data.py')
+#supervisor.set_next_code_file('test.dialog.py')
+#supervisor.set_next_code_file('test.info.py')
 #supervisor.set_next_code_file('test.menu.py')
 #supervisor.set_next_code_file('test.ui.py')
 supervisor.set_next_code_file('main.py')

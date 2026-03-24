@@ -1,0 +1,27 @@
+{
+  "padding": 10,
+  "elements": [
+    {
+      "id": "title",
+      "type": "heading",
+      "text": "SENSOR DATA",
+      "color": "0x000000",
+      "width": 100,
+      "margin_bottom": 15
+    },
+    {
+      "id": "temp_read",
+      "type": "label",
+      "text": "Temp: 22C",
+      "color": "0x000000",
+      "margin_bottom": 5
+    },
+    {
+      "id": "divider",
+      "type": "rect",
+      "width": 100, "height": 1,
+      "fill": "0x000000",
+      "margin_bottom": 10
+    }
+  ]
+}

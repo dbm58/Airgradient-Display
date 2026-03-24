@@ -1,0 +1,19 @@
+{
+  "background": "0x000000",
+  "elements": [
+    {
+      "type": "label",
+      "id": "header",
+      "text": "System Status",
+      "x": 10, "y": 20,
+      "color": "0x00FF00"
+    },
+    {
+      "type": "rect",
+      "id": "status_bar",
+      "x": 0, "y": 40,
+      "width": 240, "height": 2,
+      "fill": "0x444444"
+    }
+  ]
+}

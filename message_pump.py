@@ -2,12 +2,11 @@ import alarm
 import board
 from digitalio import DigitalInOut, Direction, Pull
 import time
+import wifi
 
 from battery import Battery
 battery = Battery()
 from buttons import Buttons
-from wifi_manager import WiFiManager
-wifi = WiFiManager()
 
 DISPLAY_DATA = 1
 CHARGE_NEEDED = 2
@@ -24,6 +23,18 @@ BUTTON_UP_C = 18
 BUTTON_UP_D = 19
 PROGRAM_DONE = 99
 
+def is_wifi_connected():
+    # If we aren't associated with an AP, the connection is definitely down
+    if wifi.radio.ap_info is None:
+        print('ap info is none')
+        return False
+    # Double check we still have an IP
+    if wifi.radio.ipv4_address is None:
+        print('ipv4 address is none')
+        return False
+    print('wifi is connected')
+    return True
+
 class MessagePump:
     def __init__(self):
         self.buttons = Buttons()
@@ -34,7 +45,7 @@ class MessagePump:
     def time_alarm(self):
         next_update = time.monotonic() + (60 * self.refresh_rate)
         return alarm.time.TimeAlarm(monotonic_time=next_update)
-        
+
     def __iter__(self):
         triggered_alarm = self.time_alarm
         while True:
@@ -50,9 +61,9 @@ class MessagePump:
                 yield (CHARGE_NEEDED, battery.voltage)
                 time.sleep(5)
                 alarm.exit_and_deep_sleep_until_alarms()
-            elif not wifi.connected:
+            elif not is_wifi_connected():
                 yield (WIFI_DOWN, None)
-                if wifi.connected:
+                if is_wifi_connected():
                     continue
             elif isinstance(triggered_alarm, alarm.pin.PinAlarm):
                 yield (BUTTON_DOWN, self.buttons.name(triggered_alarm))

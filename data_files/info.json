@@ -1,0 +1,28 @@
+{
+  "padding": 10,
+  "elements": [
+    {
+      "type": "heading",
+      "text": "CircuitPython",
+      "color": "0x000000",
+      "width": 100,
+      "margin_bottom": 5
+    },
+    {
+      "type": "field",
+      "id": "board",
+      "label": "Board:",
+      "value": "",
+      "color": "0x000000",
+      "margin_bottom": 5
+    },
+    {
+      "type": "field",
+      "id": "version",
+      "label": "Version:",
+      "value": "",
+      "color": "0x000000",
+      "margin_bottom": 5
+    }
+  ]
+}

@@ -1,18 +1,22 @@
 import board
 import log
+import wifi
+import socketpool
+import adafruit_requests
+import adafruit_connection_manager
 
 from airgradient import Airgradient
 from devices import Devices
 from message_pump import *
 from ui import Ui
-from wifi_manager import WiFiManager
 
 ui = Ui(board.DISPLAY)
 ui.define_fields(['CO2', 'TVOC', 'NOx'])
 
-wifi = WiFiManager()
 # move the get_requests call to Airgradient
-requests = wifi.get_requests()
+pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
+ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
+requests = adafruit_requests.Session(pool, ssl_context)
 
 devices = Devices()
 sn, descr = devices.current
@@ -25,11 +29,14 @@ def battery_dead():
     return
 
 def wifi_down():
-    if not wifi.connect():
-        ui.wifi_off_dialog.hidden = False
-        ui.refresh()
-        return
-    ui.wifi_off_dialog.hidden = True
+    # if not wifi.connect():
+    #     ui.wifi_off_dialog.hidden = False
+    #     ui.refresh()
+    #     return
+    # ui.wifi_off_dialog.hidden = True
+    #
+    #  wifi is auto-reconnect now
+    pass
 
 def refresh():
     try:
