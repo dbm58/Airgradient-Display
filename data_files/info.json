@@ -1,28 +1,17 @@
 {
   "padding": 10,
+  "background": "0xFFFFFF",
+  "color": "0x000000",
+  "margin": 5,
   "elements": [
-    {
-      "type": "heading",
-      "text": "CircuitPython",
-      "color": "0x000000",
-      "width": 100,
-      "margin_bottom": 5
-    },
-    {
-      "type": "field",
-      "id": "board",
-      "label": "Board:",
-      "value": "",
-      "color": "0x000000",
-      "margin_bottom": 5
-    },
-    {
-      "type": "field",
-      "id": "version",
-      "label": "Version:",
-      "value": "",
-      "color": "0x000000",
-      "margin_bottom": 5
-    }
+    { "type": "heading", "text": "CircuitPython", "padding": 2, "width": 100 },
+    { "type": "field", "id": "board", "label": "Board:", "value": "" },
+    { "type": "field", "id": "version", "label": "Version:", "value": "" },
+
+    { "type": "spacer", "height": 10 },
+
+    { "type": "heading", "text": "Battery", "padding": 2, "width": 100 },
+    { "type": "field", "id": "voltage", "label": "Voltage:", "value": "" },
+    { "type": "field", "id": "ext-power", "label": "External Power:", "value": "" },
   ]
 }

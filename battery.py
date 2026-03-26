@@ -23,8 +23,12 @@ class Battery:
         return (self.pin.value * 3.3) / 65536 * 2
 
     @property
+    def on_external_power(self):
+        return self.usb_power_pin.value
+
+    @property
     def charge_needed(self):
-        if self.usb_power_pin.value:
+        if self.on_external_power:
             log.debug("Running on external power!")
             return False
         log.debug("Running on battery!")
