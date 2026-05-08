@@ -1,6 +1,10 @@
 import board
 import time
 import sys
+import wifi
+import socketpool
+import adafruit_requests
+import adafruit_connection_manager
 
 from ui_base import UiBase
 from data import info
@@ -21,6 +25,15 @@ bat = Battery()
 alarm = ' !!!' if bat.charge_needed else ''
 widgets['voltage'].text = str(bat.voltage) + alarm
 widgets['ext-power'].text = str(bat.on_external_power)
+
+pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
+ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
+requests = adafruit_requests.Session(pool, ssl_context)
+radio = wifi.radio
+ap_info = radio.ap_info
+widgets['ssid'].text = str(ap_info.ssid)
+widgets['address'].text = str(radio.addresses[0])
+widgets['rssi'].text = str(ap_info.rssi)
 
 ui.refresh()
 

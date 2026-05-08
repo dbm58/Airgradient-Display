@@ -8,10 +8,18 @@
     { "type": "field", "id": "board", "label": "Board:", "value": "" },
     { "type": "field", "id": "version", "label": "Version:", "value": "" },
 
-    { "type": "spacer", "height": 10 },
+    { "type": "spacer", "height": 5 },
 
     { "type": "heading", "text": "Battery", "padding": 2, "width": 100 },
     { "type": "field", "id": "voltage", "label": "Voltage:", "value": "" },
     { "type": "field", "id": "ext-power", "label": "External Power:", "value": "" },
+
+    { "type": "spacer", "height": 5 },
+
+    { "type": "heading", "text": "WiFi", "padding": 2, "width": 100 },
+    { "type": "field", "id": "ssid", "label": "SSID:", "value": "" },
+    { "type": "field", "id": "address", "label": "Address:", "value": "" },
+    { "type": "field", "id": "rssi", "label": "RSSI:", "value": "" },
+
   ]
 }
